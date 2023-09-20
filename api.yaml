@@ -1,0 +1,261 @@
+openapi: 3.0.0
+info:
+  title: Code Improve API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 1.0
+
+servers:
+  - url: http://65.2.183.51:8000
+    description: Pre Production server
+  - url: http://localhost:8000/
+    description: Local server
+
+components:
+  securitySchemes:
+    ApiTokenss:
+      type: http
+      scheme: bearer
+
+    ApiKey:
+      type: apiKey
+      in: header
+      name: apikey
+
+paths:
+  # RSS APIs
+
+  /api/allRssLinks:
+    get:
+      summary: Get all RSS links
+      tags:
+        - RSS_Link_API
+      responses:
+        "200":
+          description: Successful response
+
+  /api/oneLink:
+    post:
+      summary: Get an RSS link by country
+      tags:
+        - RSS_Link_API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                country:
+                  type: string
+              example:
+                country: "USA"
+      responses:
+        "200":
+          description: Successful response
+
+  # Articles APIs
+
+  /api/article/getAllArticles:
+    get:
+      summary: Get all articles for all countries
+      tags:
+        - Articles_API
+      responses:
+        "200":
+          description: Successful response
+
+#Getting Articles info by Newspaper Name
+  /api/article/getAllArticlesByNewspaper:
+    post:
+      summary: Get all articles for a newspaper by name
+      tags:
+        - Articles_API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newspaperName:
+                  type: string
+              example:
+                newspaperName: "bbc.com"
+      responses:
+        "200":
+          description: Successful response
+        "500":
+          description: Internal Server Error
+
+
+  /api/article/getArticlesForMonths:
+    post:
+      summary: Get articles from all countries for a given number of months
+      tags:
+        - Articles_API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                months:
+                  type: integer
+                  minimum: 1
+      responses:
+        "200":
+          description: Successful response
+
+  # Country APIs
+
+  /api/country/getallCountryArticleNumber:
+    get:
+      summary: Get all country articles data
+      tags:
+        - Country_API
+      responses:
+        "200":
+          description: Successful response
+
+  /api/country/getaCountryArticleNumber:
+    post:
+      summary: Get number of articles for a country
+      tags:
+        - Country_API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                countryName:
+                  type: string
+              example:
+                countryName: "USA"
+      responses:
+        "200":
+          description: Successful response
+
+  /api/country/getallCountryArticlesMonth:
+    get:
+      summary: Get all country articles' publication dates
+      tags:
+        - Country_API
+      responses:
+        "200":
+          description: Successful response
+
+  /api/country/getoneCountryArticlesMonth:
+    post:
+      summary: Get a country's articles for a specific number of months
+      tags:
+        - Country_API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                countryName:
+                  type: string
+              example:
+                countryName: "USA"
+      responses:
+        "200":
+          description: Successful response
+
+
+## Newspaper APIs
+  # to get data for a given newspaper
+  /api/newspaper/getAllDataForNewspaper:
+    post:
+      summary: Get all data for a newspaper by name
+      tags:
+        - Newspaper_API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newspaperName:
+                  type: string
+              example:
+                newspaperName: "bbc.com"
+      responses:
+        "200":
+          description: Successful response
+
+  # add a newspaper to newspaper table
+  /api/newspaper/addNewspaper:
+    post:
+      summary: Add a new newspaper to table
+      tags:
+        - Newspaper_API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newspaper_name:
+                  type: string
+                  description: Name of the newspaper
+                link:
+                  type: string
+                  description: Link to the newspaper website
+                country:
+                  type: string
+                  description: Country where the newspaper is based
+                monthly_readers:
+                  type: integer
+                  description: Number of monthly readers
+                political_inclination:
+                  type: string
+                  description: Political inclination of the newspaper
+                basic_info:
+                  type: string
+                  description: Basic information about the newspaper
+                logo:
+                  type: string
+                  description: URL of the newspaper's logo
+                articles:
+                  type: array
+                  items:
+                    type: string
+                  description: Array of article URLs
+              example:
+                example:
+                newspaper_name: "hindustan times"
+                link: "https://www.hindustantimes.com/"
+                country: "Bharat"
+                monthly_readers: 100000
+                political_inclination: "Right"
+                basic_info: "Hindustan Times offers the most reliable news in politics, sports, entertainment and business, featuring National and International news"
+                logo: "https://www.example.com/logo.png"
+                articles: "keep it empty"
+      responses:
+        "201":
+          description: Newspaper created successfully
+  /api/newspaper/getAllNewspapers:
+    get:
+      summary: Get a list of all newspapers
+      tags:
+        - Newspaper_API
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties: // Define the properties based on your newspaper data model
+        "500":
+          description: Internal Server Error
